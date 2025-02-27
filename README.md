@@ -88,8 +88,6 @@ kubectl exec -it multitool -- curl nginx-multitool-svc:9002
 
 ![image](https://github.com/user-attachments/assets/3600f24b-cbeb-4201-aad9-ade39dd77667)
 
-```
-
 ---
 
 ## Задание 2: Создание Service для доступа снаружи кластера
@@ -102,38 +100,31 @@ kubectl exec -it multitool -- curl nginx-multitool-svc:9002
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-app-nodeport
+  name: nginx-multitool-svc-np
 spec:
-  type: NodePort
   selector:
-    app: my-app
+    app: nginx-multi
   ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30001
+    - name: nginx
+      protocol: TCP
+      port: 80
+      nodePort: 30001
+    - name: multitool
+      protocol: TCP
+      port: 8090
+      nodePort: 30002
+  type: NodePort
 ```
 
 ### 2. Проверка доступа снаружи кластера
 
 Теперь можно проверить доступ к `nginx` снаружи кластера, используя IP-адрес любого узла кластера и порт `30001`.
 
-```bash
-curl http://<NodeIP>:30001
-```
+![image](https://github.com/user-attachments/assets/d350f29e-e15e-4ebe-b377-748b19f3831f)
 
-### 3. Демонстрация доступа с помощью браузера или curl
+![image](https://github.com/user-attachments/assets/219dc90b-5145-4e11-83d6-a8a2e5c97f0e)
 
-Вывод команды `curl` или открытие в браузере по адресу `http://<NodeIP>:30001` должно показать страницу приветствия `nginx`.
 
-```bash
-# Пример вывода
-curl http://<NodeIP>:30001
-<!DOCTYPE html>
-<html>
-<head>
-<title>Welcome to nginx!</title>
-...
-```
 
 ---
 
